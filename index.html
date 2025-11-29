@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>記憶拼圖 - 婚禮前夜</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="introOverlay">
+        <div class="intro-content">
+            <div id="typingText" class="glowing-text"></div>
+            <span class="cursor">|</span>
+            <br>
+            <button id="enterGameBtn" class="fade-in-btn">進入記憶長廊</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="nav-arrow left" id="leftArrow">◀</div>
+        <div class="nav-arrow right" id="rightArrow">▶</div>
+
+        <div class="slide-indicator">
+            <div class="indicator-dot active" data-slide="0"></div>
+            <div class="indicator-dot" data-slide="1"></div>
+            <div class="indicator-dot" data-slide="2"></div>
+        </div>
+
+        <div class="slides-wrapper" id="slidesWrapper">
+            <div class="slide" data-slide="0">
+                <div class="slide-image">
+                    <img src="https://i.ibb.co/DfryHJCc/01.jpg" alt="區塊一背景圖片" class="slide-main-image">
+
+                    <div class="hotspot" style="top: 12%; left: 25%;" data-info="哇，好懷念，是小時候的全家福" data-clue-img="https://i.ibb.co/svKJ2qVc/image.jpg"></div>
+                    <div class="hotspot" style="top: 12%; left: 65%;" data-info="被打破的窗戶，我印象中好像上面有被哥哥塗鴉，是什麼圖案呢" data-clue-img="https://i.ibb.co/4gDzfFwZ/image.jpg"></div>
+                    <div class="hotspot" style="top: 32%; left: 45%;" data-info="家裡總是堆著這些衣服，因為是家中的生計來源" data-clue-img="https://i.ibb.co/Pvy7jHFq/6-4x.png"></div>
+                    <div class="hotspot" style="top: 65%; left: 40%;" data-info="沙發下有一張考卷，這看起來是二哥的考卷" data-clue-img="https://i.ibb.co/DPRRvZjg/9-4x.png"></div>
+                    <div class="hotspot" style="top: 67%; left: 70%;" data-info="這應該就是媽媽給我的飯錢了" data-clue-img="https://i.ibb.co/Wp74fvpJ/7-4x.png"></div>
+                    <div class="hotspot" style="top: 80%; left: 30%;" data-info="破碎的酒瓶，上面寫著JW…(看不清楚數字)" data-clue-img="https://i.ibb.co/4wbRt8kY/image.jpg"></div>
+                    <div class="hotspot" style="top: 90%; left: 60%;" data-info="不知為何被燒掉的考卷，好像是大哥的，到底他考了幾分？" data-clue-img="https://i.ibb.co/1t5ZLb2P/10-4x.png"></div>
+                </div>
+                <div class="button-area">
+                    <button class="solve-button pixel-text" data-slide="0" data-question="家裡怎麼會變成這樣，一定是...，算了，我現在只想把這些破碎的東西恢復原狀。這樣可以得到幸福的總和嗎？：">幸福的總和？</button>
+                </div>
+            </div>
+
+            <div class="slide" data-slide="1">
+                <div class="slide-image">
+                    <img src="https://i.ibb.co/B2cLg7Pc/02.jpg" alt="區塊二背景圖片" class="slide-main-image">
+
+                    <div class="hotspot" style="top: 45%; left: 20%;" data-info="是甜點店，我最喜歡吃海鹽焦糖布蕾！" data-clue-img="https://i.ibb.co/cSm64HB1/12-4x.png"></div>
+                    <div class="hotspot" style="top: 8%; left: 60%;" data-info="每次顧攤位，總是會得到一份雞柳便當" data-clue-img="https://i.ibb.co/wh6NJfTT/13-4x.png"></div>
+                    <div class="hotspot" style="top: 40%; left: 37%;" data-info="媽媽總是在賣Jet這一牌的衣服..." data-clue-img="https://i.ibb.co/qFFpB5XR/16-4x.png"></div>
+                    <div class="hotspot" style="top: 42%; left: 75%;" data-info="好多水果，我小時候最喜歡吃芒果了。" data-clue-img="https://i.ibb.co/wZF5rJHZ/14-4x.png"></div>
+                    <div class="hotspot" style="top: 72%; left: 24%;" data-info="媽媽說長大才可以喝酒喔！我現在是很愛喝。" data-clue-img="https://i.ibb.co/jkWGDTTp/15-4x.png"></div>
+                </div>
+                <div class="button-area">
+                    <button class="solve-button pixel-text" data-slide="1" data-question="我幫媽媽顧攤位，真是孝順(自己說)，但是肚子餓了想吃東西，媽媽說有留飯錢給我，但吃完剩下的要還她，總共要還多少啊？總之，先把喜歡吃的全部買完再說！">飯錢還剩下多少呢？</button>
+                </div>
+            </div>
+
+            <div class="slide" data-slide="2">
+                <div class="slide-image">
+                    <img src="https://i.ibb.co/RTy5KcKr/03.jpg" alt="區塊三背景圖片" class="slide-main-image">
+
+                    <div class="hotspot" style="top: 10%; left: 20%;" data-info="這好像是全班畢業一起送班導的禮物，咦，好像哪裡怪怪的" data-clue-img="https://i.ibb.co/VcL1XnFm/1-4x.png"></div>
+                    <div class="hotspot" style="top: 35%; left: 65%;" data-info="這是爸爸的機車，小時候他總是用這台送我上學，咦，好像哪裡怪怪的" data-clue-img="https://i.ibb.co/hxNMKkxt/image.jpg"></div>
+                    <div class="hotspot" style="top: 25%; left: 37%;" data-info="以前都會寫優等生在上面，咦，好像哪裡怪怪的" data-clue-img="https://i.ibb.co/N6DfnJWT/2-4x.png"></div>
+
+                    <div class="hotspot" style="top: 33%; left: 30%;" data-info="學校的電腦，以前的機型好舊喔，<span style='color: red;'>還在用IE</span>。" data-clue-img="https://i.ibb.co/dww2Lbvt/image.jpg"></div>
+
+                    <div class="hotspot" style="top: 73%; left: 47%;" data-info="二哥桌上有聯絡簿，上面寫著：他這次考了80分結果竟然被燒掉了！抄慘。還好我把我的考卷藏起來了哈哈。
+喔喔，果然被我抓到錯字了" data-clue-img="https://i.ibb.co/KcJ5cHbf/4-4x.png"></div>
+                </div>
+                <div class="button-area">
+                    <button class="solve-button pixel-text" data-slide="2" data-question="爸媽叫我來教室幫哥哥抄聯絡簿，還叮嚀我要改錯字！但是好像不只聯絡簿上有錯字呢！">好多錯字呀！</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <h2 class="pixel-text">線索</h2>
+            <div class="clue-image-placeholder" id="clueImagePlaceholder">
+            </div>
+            <p id="infoText"></p>
+            <div class="modal-buttons">
+                <button class="modal-button secondary pixel-text" onclick="closeModal('infoModal')">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="puzzleModal">
+        <div class="modal-content">
+            <h2 class="pixel-text">輸入答案</h2>
+            <p id="puzzleQuestion">請輸入本區塊的謎題答案：</p>
+            <input type="text" id="answerInput" placeholder="請輸入答案" class="pixel-text">
+
+            <p class="hint-message" id="hintMessage">答案錯誤，請再試試！</p>
+
+            <div class="modal-buttons">
+                <button class="modal-button primary pixel-text" onclick="checkAnswer()">提交</button>
+                <button class="modal-button secondary pixel-text" onclick="closeModal('puzzleModal')">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="solutionModal">
+        <div class="modal-content">
+            <h2 class="pixel-text">謎底揭曉</h2>
+            <p id="solutionText"></p>
+            <div class="modal-buttons">
+                <button class="modal-button secondary pixel-text" onclick="closeModal('solutionModal')">關閉</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="finalModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('finalModal')">&times;</span>
+            <h2>三段記憶都被點亮了</h2>
+            <p style="text-align: left; line-height: 1.6;">
+                記憶化作柔和的光芒，圍繞著她。<br>
+                光芒越來越亮——<br>
+                當她睜開眼睛時，聽見的已經不是童年的聲音，<br>
+                而是婚禮現場的音樂。<br>
+                美麗的禮堂、親友的祝福、心愛的人在前方等著。<br>
+                她深吸一口氣，踏出步伐。<br>
+                <br>
+                今天，是她全新人生的開始。
+            </p>
+            <button onclick="enterGrandFinale()" class="confirm-btn">走入禮堂</button>
+        </div>
+    </div>
+
+    <div id="grandFinaleOverlay">
+        <div class="finale-container">
+            <img src="https://i.ibb.co/0Rgmrmwg/Gemini-Generated-Image-5o7gm05o7gm05o7g.jpg" class="finale-img" alt="婚禮現場">
+
+            <div class="hotspot finale-hotspot" style="top: 50%; left: 20%;" data-info="這是第一個婚禮現場的細節描述..." data-clue-img=""></div>
+            <div class="hotspot finale-hotspot" style="top: 60%; left: 50%;" data-info="這是第二個婚禮現場的細節描述..." data-clue-img=""></div>
+            <div class="hotspot finale-hotspot" style="top: 40%; left: 80%;" data-info="這是第三個婚禮現場的細節描述..." data-clue-img=""></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

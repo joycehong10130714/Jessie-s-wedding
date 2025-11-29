@@ -1,0 +1,561 @@
+/* ================================================= */
+/* === 調整後 CSS V4：童趣暖色系 (僅顏色修改) === */
+/* ================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Courier New', monospace;
+    overflow: hidden;
+    /* [顏色修改] 主背景：極淺檸檬黃 (明亮、溫暖) */
+    background: #FFFFE0; 
+    touch-action: pan-y;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* 8-bit 字體效果 */
+.pixel-text {
+    font-family: 'Courier New', monospace;
+    image-rendering: pixelated;
+    /* [顏色新增] 預設文字顏色：暖棕色，確保在淺色背景上清晰 */
+    color: #8B4513; 
+}
+
+/* 主容器 */
+.container {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    max-width: 400px;
+    max-height: 932px;
+    margin: 0 auto;
+    /* [顏色修改] 外框陰影：柔和桃色陰影 */
+    box-shadow: 0 0 40px rgba(255, 218, 185, 0.8);
+    /* [顏色新增] 容器背景：純白 */
+    background: #FFFFFF;
+}
+
+/* 在桌面上顯示手機外框效果 */
+@media (min-width: 431px) {
+    .container {
+        /* [顏色修改] 外框邊框：暖棕色 */
+        border: 8px solid #8B4513; 
+        border-radius: 40px;
+        height: 90vh;
+        max-height: 844px;
+    }
+}
+
+/* 確保在手機上全屏顯示 */
+@media (max-width: 430px) {
+    .container {
+        max-width: 100vw;
+        max-height: 100vh;
+        height: 100vh;
+    }
+}
+
+/* 滑動區塊容器 (保留) */
+.slides-wrapper {
+    display: flex;
+    width: 300%;
+    height: 100%;
+    transition: transform 0.3s ease-out;
+}
+
+/* 單一區塊 (保留) */
+.slide {
+    width: 33.333%;
+    height: 100%;
+    position: relative;
+    flex-shrink: 0;
+    min-width: 33.333%;
+}
+
+.slide-image {
+    width: 100%;
+    height: calc(100% - 80px);
+    position: relative;
+    /* [顏色修改] 後備背景色：極淺檸檬黃 */
+    background: #FFFFE0; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 新增或修改此樣式：確保圖片填滿並置中 (保留) */
+.slide-image .slide-main-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    image-rendering: pixelated;
+}
+
+/* 點擊熱點 */
+.hotspot {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    /* [顏色修改] 熱點背景：柔和桃色，帶透明度 */
+    background: rgba(255, 218, 185, 0.5);
+    /* [顏色修改] 熱點邊框：淺鮭魚紅 */
+    border: 2px solid #FFA07A;
+    border-radius: 50%;
+    cursor: pointer;
+    animation: pulse 1.5s infinite;
+    transition: all 0.2s;
+    z-index: 100;
+}
+
+.hotspot:hover {
+    /* [顏色修改] 熱點 Hover 顏色 */
+    background: rgba(255, 218, 185, 0.8);
+    transform: scale(1.1);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.15); }
+}
+
+/* 底部按鈕區 */
+.button-area {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* [顏色修改] 按鈕區背景：柔和桃色 */
+    background: #FFDAB9;
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border-top: 4px solid #8B4513;
+}
+
+.solve-button {
+    padding: 12px 32px;
+    font-size: 18px;
+    font-weight: bold;
+    /* [顏色修改] 按鈕背景：淺鮭魚紅 */
+    background: #FFA07A;
+    /* [顏色修改] 文字顏色：暖棕色 (高對比) */
+    color: #8B4513;
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border: 4px solid #8B4513;
+    cursor: pointer;
+    text-transform: uppercase;
+    /* [顏色修改] 陰影顏色：暖棕色 */
+    box-shadow: 4px 4px 0px #8B4513;
+    transition: all 0.1s;
+    font-family: 'Courier New', monospace;
+}
+
+.solve-button:hover {
+    /* [顏色修改] Hover 顏色 */
+    background: #FFB589;
+}
+
+.solve-button:active {
+    transform: translate(2px, 2px);
+    /* [顏色修改] 陰影顏色：暖棕色 */
+    box-shadow: 2px 2px 0px #8B4513;
+}
+
+.solve-button.solved {
+    /* [顏色修改] 解鎖按鈕顏色：柔和桃色 */
+    background: #FFDAB9;
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border-color: #8B4513;
+    /* [顏色新增] 文字顏色：確保已解鎖按鈕文字為暖棕色 */
+    color: #8B4513;
+}
+
+/* 左右滑動指示 */
+.nav-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    /* [顏色修改] 箭頭背景：淺鮭魚紅，帶透明度 */
+    background: rgba(255, 160, 122, 0.8);
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border: 3px solid #8B4513;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px;
+    /* [顏色修改] 箭頭文字顏色：暖棕色 */
+    color: #8B4513;
+    user-select: none;
+    /* [顏色修改] 陰影顏色：暖棕色 */
+    box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
+}
+
+.nav-arrow:hover {
+    /* [顏色修改] Hover 顏色 */
+    background: rgba(255, 160, 122, 1);
+}
+
+.nav-arrow.left {
+    left: 10px;
+}
+
+.nav-arrow.right {
+    right: 10px;
+}
+
+.nav-arrow.hidden {
+    display: none;
+}
+
+/* Modal 彈窗 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* [顏色修改] 遮罩透明度：使用暖色系背景，稍微深一點 */
+    background: rgba(139, 69, 19, 0.6); 
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 新增：線索圖片佔位符 */
+.clue-image-placeholder {
+    width: 50%;
+    margin-left: auto; 
+    margin-right: auto;
+    height: 0;
+    padding-top: 50%;
+    position: relative;
+    margin-bottom: 16px;
+    /* [顏色修改] 預設背景色：柔和桃色 */
+    background: #FFDAB9;
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border: 3px solid #8B4513;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+.clue-image-placeholder img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    image-rendering: pixelated;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    /* [顏色修改] 彈窗背景：純白 (確保文字清晰) */
+    background: #FFFFFF;
+    /* [顏色修改] 邊框顏色：淺鮭魚紅 */
+    border: 4px solid #FFA07A;
+    padding: 24px;
+    max-width: 400px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    /* [顏色修改] 陰影顏色：暖棕色 */
+    box-shadow: 8px 8px 0px #8B4513;
+    position: relative;
+}
+
+.modal-content h2 {
+    /* [顏色修改] 標題顏色：淺鮭魚紅 */
+    color: #FFA07A;
+    margin-bottom: 16px;
+    font-size: 24px;
+}
+
+.modal-content p {
+    /* [顏色修改] 文字顏色：暖棕色 (高對比) */
+    color: #8B4513;
+    line-height: 1.6;
+    margin-bottom: 16px;
+    font-size: 16px;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    /* [顏色修改] 輸入框邊框：柔和桃色 */
+    border: 3px solid #FFDAB9;
+    /* [顏色修改] 輸入框背景：柔和桃色 */
+    background: #FFDAB9;
+    /* [顏色修改] 輸入框文字顏色：暖棕色 (高對比) */
+    color: #8B4513;
+    margin-bottom: 16px;
+    font-family: 'Courier New', monospace;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.modal-button {
+    flex: 1;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    /* [顏色修改] 邊框顏色：暖棕色 */
+    border: 3px solid #8B4513;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    text-transform: uppercase;
+}
+
+.modal-button.primary {
+    /* [顏色修改] 主要按鈕：淺鮭魚紅背景，暖棕色文字 */
+    background: #FFA07A;
+    color: #8B4513;
+}
+
+.modal-button.secondary {
+    /* [顏色修改] 次要按鈕：柔和桃色背景，暖棕色文字 */
+    background: #FFDAB9;
+    color: #8B4513;
+}
+
+.modal-button:hover {
+    opacity: 0.9;
+}
+
+/* 提示訊息 */
+.hint-message {
+    /* [顏色修改] 提示文字顏色：使用淺鮭魚紅 */
+    color: #FFA07A;
+    font-size: 14px;
+    margin-top: 8px;
+    display: none;
+}
+
+.hint-message.show {
+    display: block;
+}
+
+/* 區塊指示器 */
+.slide-indicator {
+    position: absolute;
+    bottom: 90px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    /* [顏色修改] 圓點預設背景：柔和桃色，帶透明度 */
+    background: rgba(255, 218, 185, 0.7);
+    /* [顏色修改] 圓點邊框：暖棕色 */
+    border: 2px solid #8B4513;
+}
+
+.indicator-dot.active {
+    /* [顏色修改] 活躍圓點：淺鮭魚紅 */
+    background: #FFA07A;
+}
+
+/* 修正：讓謎底彈窗中的文字換行符號 (\n) 生效 */
+#solutionText {
+    /* white-space: pre-wrap; 會保留換行符號，且自動斷行 */
+    white-space: pre-wrap; 
+    
+    /* 確保文字顏色和間距符合您的設計 */
+    color: #8B4513; /* 使用您當前的暖棕色文字 */
+    line-height: 1.8; /* 增加行距，讓長文閱讀更舒適 */
+    margin-bottom: 16px; 
+}
+
+/* --- 開場動畫相關 CSS --- */
+
+#introOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: opacity 1.5s ease-out; /* 遮罩本身的淡出 */
+}
+
+.intro-content {
+    max-width: 600px;
+    width: 100%;
+    /* 這裡不需要置中設定，因為我們會用 absolute 定位按鈕 */
+}
+
+/* 文字區域設定 */
+#typingText, .cursor {
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.8;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: opacity 1s ease; /* 文字淡出需要這個轉場 */
+}
+
+.glowing-text {
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.6), 0 0 10px rgba(255, 255, 255, 0.4);
+    white-space: pre-wrap;
+}
+
+.cursor {
+    display: inline-block;
+    animation: blink 1s infinite;
+    font-weight: bold;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* 按鈕樣式：絕對置中 */
+#enterGameBtn {
+    display: none; /* 一開始隱藏 */
+    position: absolute; /* 絕對定位，脫離文字流 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* 確保真正的正中心 */
+    
+    padding: 15px 30px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    color: #fff;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    opacity: 0; /* 為了淡入效果 */
+    transition: all 0.5s ease, opacity 1.5s ease; /* 增加 opacity 的轉場時間 */
+    z-index: 10000;
+}
+
+#enterGameBtn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
+}
+
+/* 隱藏遮罩用的 class */
+.overlay-hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* --- 結局畫面樣式 --- */
+
+#grandFinaleOverlay {
+    display: none; /* 預設隱藏 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #000; /* 背景黑 */
+    z-index: 1000; /* 確保蓋過原本遊戲 */
+    overflow-y: auto; /* 如果圖太長可以捲動 */
+    animation: fadeIn 1s ease-in;
+}
+
+#grandFinaleOverlay.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.finale-container {
+    position: relative; /* 讓熱點可以根據此容器定位 */
+    width: 100%;
+    max-width: 800px; /* 限制最大寬度，避免電腦版圖太大 */
+    margin: 0 auto;
+}
+
+.finale-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+/* 確保結局熱點使用原本的熱點動畫，但您可以微調大小或顏色 */
+.finale-hotspot {
+    /* 繼承原本 .hotspot 的樣式，這裡可以額外調整 */
+    z-index: 1001;
+}
+
+/* 簡單的淡入動畫 */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* --- 最終謎底按鈕樣式 (與解答按鈕統一) --- */
+.confirm-btn {
+    /* 1. 字體與大小設定 */
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    
+    /* 2. 顏色設定 (複製 solve-button 的樣式) */
+    background: #FFA07A;       /* 淺鮭魚紅 */
+    color: #8B4513;            /* 暖棕色 */
+    border: 4px solid #8B4513; /* 暖棕色邊框 */
+    
+    /* 3. 外觀與陰影 (像素風格) */
+    padding: 12px 32px;
+    box-shadow: 4px 4px 0px #8B4513; /* 實心陰影 */
+    cursor: pointer;
+    transition: all 0.1s;
+
+    /* 4. [關鍵] 置中設定 */
+    display: block;            /* 設為區塊元素才能用 margin: auto 置中 */
+    margin: 20px auto 0 auto;  /* 上距20px，左右自動(置中)，下距0 */
+    width: fit-content;        /* 讓按鈕寬度剛好包住文字，不會變全寬 */
+}
+
+/* Hover 效果 */
+.confirm-btn:hover {
+    background: #FFB589;       /* 稍微變亮 */
+}
+
+/* 點擊壓下效果 */
+.confirm-btn:active {
+    transform: translate(2px, 2px);  /* 往下移 */
+    box-shadow: 2px 2px 0px #8B4513; /* 陰影變小 */
+}
