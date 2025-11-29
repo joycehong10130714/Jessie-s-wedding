@@ -619,16 +619,24 @@ body {
         object-position: center;
     }
 
-    /* 4. 修正按鈕區：加入底部安全距離 */
+    /* 4. 修正按鈕區：更緊湊的佈局 */
     .button-area {
-        height: auto !important;  /* 高度改為自動，隨內容撐開 */
-        min-height: 80px;         /* 保持原本的最小視覺高度 */
-        flex-shrink: 0;           /* 禁止按鈕區被壓縮 */
+        height: auto !important;
+        min-height: 0 !important; /* 關鍵：取消 80px 的最小高度限制，讓它貼合內容 */
+        flex-shrink: 0;
         
-        /* 加入 iPhone 底部橫條 (Home Indicator) 的安全距離 */
-        /* env(safe-area-inset-bottom) 會自動計算那條橫槓的高度 */
-        padding-bottom: calc(10px + env(safe-area-inset-bottom)); 
-        padding-top: 10px;
-        box-sizing: content-box;  /* 確保 padding 不會吃掉高度 */
+        /* 上下間距調整 */
+        /* 上方給 12px (原本可能被 min-height 撐得很大) */
+        padding-top: 12px; 
+        
+        /* 下方給 12px + iPhone 底部安全距離 */
+        padding-bottom: calc(12px + env(safe-area-inset-bottom)); 
+        
+        box-sizing: border-box;
+        
+        /* 確保內容垂直置中 (雖然 flex column 下這通常沒影響，但保險起見) */
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }
