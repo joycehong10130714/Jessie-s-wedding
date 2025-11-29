@@ -58,8 +58,16 @@ body {
 @media (max-width: 430px) {
     .container {
         max-width: 100vw;
-        max-height: 100vh;
-        height: 100vh;
+        
+        /* 原本是 100vh，改成 100dvh */
+        /* dvh (Dynamic Viewport Height) 會自動扣掉手機瀏覽器的網址列高度 */
+        height: 100dvh; 
+        max-height: 100dvh;
+        /* ▲▲▲ 修改結束 ▲▲▲ */
+        
+        /* 移除原本的圓角與邊框，讓手機版更滿版 */
+        border: none;
+        border-radius: 0;
     }
 }
 
@@ -140,6 +148,7 @@ body {
     background: #FFDAB9;
     /* [顏色修改] 邊框顏色：暖棕色 */
     border-top: 4px solid #8B4513;
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
 .solve-button {
