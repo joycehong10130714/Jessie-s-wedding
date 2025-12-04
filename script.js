@@ -3,12 +3,16 @@
 // ==========================================
 const gameState = {
     currentSlide: 0,
-    puzzleAnswers: ['2163', '180', '超大優惠'], // 答案
-    solvedPuzzles: [false, false, false], // 解謎狀態
+    // [修改點] 新增第4個答案 (索引3)
+    // 請在這裡將 'FINAL' 改成您想要的最終謎底
+    puzzleAnswers: ['2163', '340', '超大優惠', 'FINAL'], 
+    // [修改點] 新增第4個解謎狀態
+    solvedPuzzles: [false, false, false, false], 
     solutions: [
         '你點亮了第一段記憶......',
         '你點亮了第二段記憶......',
-        '你點亮了第三段記憶......'
+        '你點亮了第三段記憶......',
+        '恭喜通關！' // 第四段其實不會用到這個，因為會跳轉到彩蛋視窗
     ],
     finalUrlShown: false,
     currentSolveButton: null
@@ -19,7 +23,7 @@ window.addEventListener('DOMContentLoaded', function() {
     updateNavigation();
     setupEventListeners();
     loadGameState();
-    // 注意：開場動畫改由 window.load 觸發，寫在檔案最下方
+    // 注意：開場動畫改由 window.load 觸發
 });
 
 // ==========================================
@@ -42,14 +46,20 @@ function setupEventListeners() {
         });
     });
 
-    // 解謎按鈕
+    // 解謎按鈕 (包含新的結局按鈕)
     document.querySelectorAll('.solve-button').forEach(button => {
         button.addEventListener('click', function() {
             const slideIndex = parseInt(this.dataset.slide);
             gameState.currentSolveButton = this; 
             
+            // 如果這題已經解開，直接顯示結果
             if (gameState.solvedPuzzles[slideIndex]) {
-                showSolution(slideIndex);
+                // 如果是最後一題(索引3)，顯示彩蛋視窗；否則顯示一般解答視窗
+                if (slideIndex === 3) {
+                    showTrueEnding();
+                } else {
+                    showSolution(slideIndex);
+                }
             } else {
                 showPuzzleInput(slideIndex);
             }
@@ -101,13 +111,8 @@ function setupEventListeners() {
 // ==========================================
 function navigate(direction) {
     let newSlide = gameState.currentSlide + direction;
-    
-    // 無限循環邏輯
-    if (newSlide < 0) {
-        newSlide = 2; 
-    } else if (newSlide > 2) {
-        newSlide = 0; 
-    }
+    if (newSlide < 0) newSlide = 2; 
+    else if (newSlide > 2) newSlide = 0; 
     
     gameState.currentSlide = newSlide;
     updateSlidePosition();
@@ -119,13 +124,9 @@ function updateSlidePosition() {
     if(wrapper) {
         wrapper.style.transform = `translateX(-${gameState.currentSlide * 33.333}%)`;
     }
-    
     document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
-        if (index === gameState.currentSlide) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
+        if (index === gameState.currentSlide) dot.classList.add('active');
+        else dot.classList.remove('active');
     });
 }
 
@@ -136,24 +137,30 @@ function updateNavigation() {
     if(rightArrow) rightArrow.classList.remove('hidden');
 }
 
-// 顯示熱點資訊
+// 顯示熱點資訊 [修改重點：處理無圖片狀況]
 function showInfo(text, imageUrl) {
     const infoModal = document.getElementById('infoModal');
     const clueImagePlaceholder = document.getElementById('clueImagePlaceholder');
-
-    // 設定文字 (支援 HTML 顏色)
     const infoTextElement = document.getElementById('infoText');
+
     if(infoTextElement) infoTextElement.innerHTML = text;
     
-    // 處理圖片 (如果沒有 imageUrl 則清空)
     if(clueImagePlaceholder) {
         clueImagePlaceholder.innerHTML = ''; 
-        // 只有當 imageUrl 不為空字串時才建立圖片
-        if (imageUrl && imageUrl !== '') {
+        // 只有當 imageUrl 存在且不為空時才顯示
+        if (imageUrl && imageUrl.trim() !== '') {
             const img = document.createElement('img');
             img.src = imageUrl;
             img.alt = '線索圖片';
             clueImagePlaceholder.appendChild(img);
+            
+            // 移除隱藏 class，顯示框框
+            clueImagePlaceholder.classList.remove('hidden');
+            clueImagePlaceholder.style.display = 'block'; 
+        } else {
+            // 沒有圖片，加上隱藏 class
+            clueImagePlaceholder.classList.add('hidden');
+            clueImagePlaceholder.style.display = 'none'; 
         }
     }
 
@@ -199,10 +206,14 @@ function checkAnswer() {
         saveGameState();
         updateSolveButton(gameState.currentPuzzleIndex);
         closeModal('puzzleModal');
-        showSolution(gameState.currentPuzzleIndex);
         
-        // 檢查是否所有謎題都已解開
-        checkAllPuzzlesSolved();
+        // [修改點] 判斷是否為最後一關 (索引3)
+        if (gameState.currentPuzzleIndex === 3) {
+            showTrueEnding(); // 顯示彩蛋視窗
+        } else {
+            showSolution(gameState.currentPuzzleIndex); // 顯示一般解答視窗
+            checkAllPuzzlesSolved(); // 檢查是否前三關都過了
+        }
     } else {
         // 答案錯誤
         const hintElement = document.getElementById('hintMessage');
@@ -213,24 +224,25 @@ function checkAnswer() {
 }
 
 function checkAllPuzzlesSolved() {
-    const allSolved = gameState.solvedPuzzles.every(solved => solved === true);
+    // 檢查前三題 (index 0, 1, 2) 是否都解開
+    const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(solved => solved === true);
     
-    if (allSolved && !gameState.finalUrlShown) {
+    if (firstThreeSolved && !gameState.finalUrlShown) {
         gameState.finalUrlShown = true;
         saveGameState();
-        
         setTimeout(() => {
-            showFinalAnswer();
+            showFinalAnswer(); // 顯示「走入禮堂」視窗
         }, 1000);
     }
 }
 
-// 顯示最終謎底彈窗 (已修正：直接顯示 modal)
+// 顯示通往結局的過場視窗 (走入禮堂)
 function showFinalAnswer() {
     const modal = document.getElementById('finalModal');
     if(modal) modal.classList.add('active');
 }
 
+// 顯示一般解謎後的文字
 function showSolution(slideIndex) {
     const textElement = document.getElementById('solutionText');
     if(textElement) textElement.textContent = gameState.solutions[slideIndex];
@@ -239,7 +251,14 @@ function showSolution(slideIndex) {
     if(modal) modal.classList.add('active');
 }
 
+// [修改點] 顯示真正的最終彩蛋視窗
+function showTrueEnding() {
+    const modal = document.getElementById('trueEndingModal');
+    if(modal) modal.classList.add('active');
+}
+
 function updateSolveButton(slideIndex) {
+    // 注意：這裡使用屬性選取器，會自動抓到對應 data-slide 的按鈕
     const button = document.querySelector(`.solve-button[data-slide="${slideIndex}"]`);
     if(button) {
         button.textContent = '解答';
@@ -268,30 +287,36 @@ function loadGameState() {
     const saved = localStorage.getItem('puzzleGameState');
     if (saved) {
         const state = JSON.parse(saved);
+        // 合併儲存的狀態與預設狀態
+        if (state.solvedPuzzles.length < gameState.solvedPuzzles.length) {
+            const diff = gameState.solvedPuzzles.length - state.solvedPuzzles.length;
+            for(let i=0; i<diff; i++) state.solvedPuzzles.push(false);
+        }
+        
         gameState.solvedPuzzles = state.solvedPuzzles;
+        // 這裡讀取紀錄，但我們下面不再用這個變數來阻擋視窗
         gameState.finalUrlShown = state.finalUrlShown || false;
         
-        // 1. 恢復按鈕狀態
+        // 恢復按鈕狀態
         gameState.solvedPuzzles.forEach((solved, index) => {
-            if (solved) {
-                updateSolveButton(index);
-            }
+            if (solved) updateSolveButton(index);
         });
 
-        // 2. [關鍵修正] 檢查是否全部解開
-        // 如果重新整理後發現三個謎題都解開了，就自動再次顯示最終視窗，避免玩家卡關
-        const allSolved = gameState.solvedPuzzles.every(s => s === true);
-        if (allSolved) {
-            // 稍微延遲 0.5 秒再跳出，體驗比較順暢
-            setTimeout(() => {
-                showFinalAnswer();
-            }, 500);
+        // [關鍵修正] 檢查前三關是否解完
+        const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(s => s === true);
+        
+        if (firstThreeSolved) {
+             // ▼▼▼ 修改這裡 ▼▼▼
+             // 原本有檢查 if (!gameState.finalUrlShown)，現在拿掉這個條件。
+             // 只要前三關是解開的狀態，每次載入網頁都會跳出「走入禮堂」的視窗，
+             // 確保玩家如果不小心關掉或重整，還能繼續遊戲。
+             setTimeout(() => showFinalAnswer(), 500);
         }
     }
 }
 
 // ==========================================
-// 6. 開場打字動畫邏輯 (含 localStorage 檢查)
+// 6. 開場打字動畫邏輯
 // ==========================================
 const introLines = [
     "婚禮前一夜，",
@@ -323,20 +348,16 @@ async function startTypingAnimation() {
     const btnElement = document.getElementById('enterGameBtn');
     const overlay = document.getElementById('introOverlay');
 
-    // 0. 安全檢查
     if(!textElement || !overlay) return;
 
-    // --- [關鍵新增] 檢查是否已經看過動畫 ---
     if (localStorage.getItem('hasPlayedIntro')) {
-        overlay.style.display = 'none'; // 直接隱藏
-        document.body.style.overflow = ''; // 恢復捲動
-        return; // 結束函式，不執行打字
+        overlay.style.display = 'none';
+        document.body.style.overflow = ''; 
+        return; 
     }
-    // ------------------------------------
 
     document.body.style.overflow = 'hidden';
 
-    // 1. 開始打字
     for (let i = 0; i < introLines.length; i++) {
         const line = introLines[i];
         if (line === "") {
@@ -353,13 +374,11 @@ async function startTypingAnimation() {
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // 2. 文字與游標淡出
     textElement.style.opacity = '0';
     if(cursorElement) cursorElement.style.opacity = '0';
 
     await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // 3. 按鈕登場
     if(btnElement) {
         btnElement.style.display = 'block';
         requestAnimationFrame(() => {
@@ -367,10 +386,7 @@ async function startTypingAnimation() {
         });
 
         btnElement.addEventListener('click', function() {
-            // --- [關鍵新增] 記錄已看過 ---
             localStorage.setItem('hasPlayedIntro', 'true');
-            // --------------------------
-
             overlay.classList.add('overlay-hidden');
             document.body.style.overflow = '';
             setTimeout(() => {
@@ -380,7 +396,6 @@ async function startTypingAnimation() {
     }
 }
 
-// 在頁面完全載入後執行動畫檢查
 window.addEventListener('load', startTypingAnimation);
 
 // ==========================================
@@ -400,14 +415,14 @@ function setupFinaleHotspots() {
     const finaleHotspots = document.querySelectorAll('.finale-hotspot');
     
     finaleHotspots.forEach(hotspot => {
-        // Clone node 移除舊監聽器，防止重複綁定
+        // Clone node 移除舊監聽器
         const newHotspot = hotspot.cloneNode(true);
         hotspot.parentNode.replaceChild(newHotspot, hotspot);
         
         newHotspot.addEventListener('click', function(e) {
             e.stopPropagation();
             const infoText = this.dataset.info;
-            // 傳入空字串作為圖片參數，這樣就不會顯示圖片
+            // 傳入空字串作為圖片參數
             showInfo(infoText, ''); 
         });
     });
