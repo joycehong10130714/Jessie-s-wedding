@@ -489,36 +489,79 @@ body {
 /* --- 結局畫面樣式 --- */
 
 #grandFinaleOverlay {
-    display: none; /* 預設隱藏 */
+    display: none; 
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #000; /* 背景黑 */
-    z-index: 1000; /* 確保蓋過原本遊戲 */
-    overflow-y: auto; /* 如果圖太長可以捲動 */
-    animation: fadeIn 1s ease-in;
-}
-
-#grandFinaleOverlay.active {
-    display: flex;
+    
+    /* 這裡設定「手機框框外面」的背景色 */
+    /* 建議用半透明黑，或是跟網頁背景一樣的顏色 */
+    background-color: rgba(0, 0, 0, 0.85); 
+    
+    z-index: 1000; 
+    animation: fadeIn 0.5s ease-in;
+    
+    /* 確保手機框框會在畫面正中間 */
     justify-content: center;
     align-items: center;
 }
 
+#grandFinaleOverlay.active {
+    display: flex;
+}
+
 .finale-container {
-    position: relative; /* 讓熱點可以根據此容器定位 */
-    width: 100%;
-    max-width: 800px; /* 限制最大寬度，避免電腦版圖太大 */
-    margin: 0 auto;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    max-width: 400px;
+    max-height: 932px;
+    
+    /* 容器外觀 (跟主遊戲一致) */
+    background: #FFFFE0;
+    box-shadow: 0 0 40px rgba(255, 218, 185, 0.8);
+    overflow: hidden; /* 圓角內內容不溢出 */
+    
+    /* 內部排版 */
+    display: flex;
+    flex-direction: column;
+}
+
+/* 電腦版的外框樣式 */
+@media (min-width: 431px) {
+    .finale-container {
+        border: 8px solid #8B4513;
+        border-radius: 40px;
+        height: 90vh;
+        max-height: 844px;
+    }
+}
+
+/* 手機版的滿版樣式 */
+@media (max-width: 430px) {
+    .finale-container {
+        max-width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border: none;
+        border-radius: 0;
+    }
 }
 
 .finale-img {
+    /* 讓圖片佔據除了按鈕以外的所有空間 */
+    flex: 1;
     width: 100%;
     height: auto;
+    
+    /* 圖片顯示模式 */
+    /* contain: 完整顯示整張圖 (會有白邊) */
+    /* cover: 填滿整個框框 (可能會裁切掉邊緣) -> 建議用 cover 比較有沉浸感，但要注意熱點位置 */
+    object-fit: cover; 
+    object-position: center;
     display: block;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
 }
 
 /* 確保結局熱點使用原本的熱點動畫，但您可以微調大小或顏色 */
@@ -527,7 +570,34 @@ body {
     z-index: 1001;
 }
 
-/* 簡單的淡入動畫 */
+.finale-button-area {
+    /* 繼承原本按鈕區的樣式，並確保在最下方 */
+    width: 100%;
+    border-top: 4px solid #8B4513;
+    background: #FFDAB9;
+    flex-shrink: 0; /* 防止被壓縮 */
+    
+    /* 統一按鈕區高度與間距 (參考之前的修正) */
+    padding-top: 12px;
+    padding-bottom: 12px; /* 電腦版預設 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 手機版按鈕區修正 (避開小白條) */
+@media (max-width: 430px) {
+    .finale-button-area {
+        padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    }
+}
+
+/* 結局熱點樣式 (沿用原本的) */
+.finale-hotspot {
+    z-index: 1001;
+}
+
+/* 動畫 */
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -639,4 +709,45 @@ body {
         align-items: center;
         justify-content: center;
     }
+}
+
+/* === 新增 CSS 修改 === */
+
+/* 1. 當線索圖片容器沒有內容時，強制隱藏 (避免出現空框框) */
+.clue-image-placeholder:empty {
+    display: none !important;
+}
+/* 為了保險，我們也可以用一個 helper class */
+.clue-image-placeholder.hidden {
+    display: none !important;
+}
+
+/* 2. 結局頁面的容器排版 (確保按鈕在圖片下方) */
+.finale-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* 佔滿畫面 */
+    width: 100%;
+}
+
+.finale-img {
+    flex: 1; /* 圖片佔據剩餘空間 */
+    object-fit: contain; /* 確保圖片完整顯示 */
+    width: 100%;
+    height: auto;
+}
+
+/* 結局頁面的按鈕區微調 */
+.finale-button-area {
+    width: 100%;
+    /* 繼承原本 button-area 的樣式，這裡可以額外調整 */
+    margin-top: auto; /* 推到最下面 */
+    border-top: 4px solid #8B4513; /* 確保邊框一致 */
+}
+
+/* 確保彩蛋按鈕連結沒有下底線 */
+#trueEndingModal a {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
 }
