@@ -3,16 +3,15 @@
 // ==========================================
 const gameState = {
     currentSlide: 0,
-    // [修改點] 新增第4個答案 (索引3)
-    // 請在這裡將 'FINAL' 改成您想要的最終謎底
+    // [設定] 第4個答案 (索引3)，請將 'FINAL' 改成您想要的最終謎底
     puzzleAnswers: ['2163', '340', '超大優惠', 'FINAL'], 
-    // [修改點] 新增第4個解謎狀態
+    // [設定] 新增第4個解謎狀態
     solvedPuzzles: [false, false, false, false], 
     solutions: [
         '你點亮了第一段記憶......',
         '你點亮了第二段記憶......',
         '你點亮了第三段記憶......',
-        '恭喜通關！' // 第四段其實不會用到這個，因為會跳轉到彩蛋視窗
+        '恭喜通關！' 
     ],
     finalUrlShown: false,
     currentSolveButton: null
@@ -23,7 +22,6 @@ window.addEventListener('DOMContentLoaded', function() {
     updateNavigation();
     setupEventListeners();
     loadGameState();
-    // 注意：開場動畫改由 window.load 觸發
 });
 
 // ==========================================
@@ -137,7 +135,7 @@ function updateNavigation() {
     if(rightArrow) rightArrow.classList.remove('hidden');
 }
 
-// 顯示熱點資訊 [修改重點：處理無圖片狀況]
+// 顯示熱點資訊
 function showInfo(text, imageUrl) {
     const infoModal = document.getElementById('infoModal');
     const clueImagePlaceholder = document.getElementById('clueImagePlaceholder');
@@ -154,11 +152,9 @@ function showInfo(text, imageUrl) {
             img.alt = '線索圖片';
             clueImagePlaceholder.appendChild(img);
             
-            // 移除隱藏 class，顯示框框
             clueImagePlaceholder.classList.remove('hidden');
             clueImagePlaceholder.style.display = 'block'; 
         } else {
-            // 沒有圖片，加上隱藏 class
             clueImagePlaceholder.classList.add('hidden');
             clueImagePlaceholder.style.display = 'none'; 
         }
@@ -207,7 +203,7 @@ function checkAnswer() {
         updateSolveButton(gameState.currentPuzzleIndex);
         closeModal('puzzleModal');
         
-        // [修改點] 判斷是否為最後一關 (索引3)
+        // 判斷是否為最後一關 (索引3)
         if (gameState.currentPuzzleIndex === 3) {
             showTrueEnding(); // 顯示彩蛋視窗
         } else {
@@ -227,11 +223,12 @@ function checkAllPuzzlesSolved() {
     // 檢查前三題 (index 0, 1, 2) 是否都解開
     const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(solved => solved === true);
     
+    // 如果前三關解開，且還沒顯示過，就顯示
     if (firstThreeSolved && !gameState.finalUrlShown) {
         gameState.finalUrlShown = true;
         saveGameState();
         setTimeout(() => {
-            showFinalAnswer(); // 顯示「走入禮堂」視窗
+            showFinalAnswer(); 
         }, 1000);
     }
 }
@@ -251,14 +248,13 @@ function showSolution(slideIndex) {
     if(modal) modal.classList.add('active');
 }
 
-// [修改點] 顯示真正的最終彩蛋視窗
+// 顯示真正的最終彩蛋視窗
 function showTrueEnding() {
     const modal = document.getElementById('trueEndingModal');
     if(modal) modal.classList.add('active');
 }
 
 function updateSolveButton(slideIndex) {
-    // 注意：這裡使用屬性選取器，會自動抓到對應 data-slide 的按鈕
     const button = document.querySelector(`.solve-button[data-slide="${slideIndex}"]`);
     if(button) {
         button.textContent = '解答';
@@ -282,7 +278,6 @@ function saveGameState() {
     localStorage.setItem('puzzleGameState', JSON.stringify(state));
 }
 
-// 載入遊戲狀態
 function loadGameState() {
     const saved = localStorage.getItem('puzzleGameState');
     if (saved) {
@@ -294,7 +289,7 @@ function loadGameState() {
         }
         
         gameState.solvedPuzzles = state.solvedPuzzles;
-        // 這裡讀取紀錄，但我們下面不再用這個變數來阻擋視窗
+        // 這裡讀取紀錄
         gameState.finalUrlShown = state.finalUrlShown || false;
         
         // 恢復按鈕狀態
@@ -302,14 +297,10 @@ function loadGameState() {
             if (solved) updateSolveButton(index);
         });
 
-        // [關鍵修正] 檢查前三關是否解完
+        // [關鍵] 檢查前三關是否解完，如果是，自動彈出過場視窗
         const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(s => s === true);
-        
         if (firstThreeSolved) {
-             // ▼▼▼ 修改這裡 ▼▼▼
-             // 原本有檢查 if (!gameState.finalUrlShown)，現在拿掉這個條件。
-             // 只要前三關是解開的狀態，每次載入網頁都會跳出「走入禮堂」的視窗，
-             // 確保玩家如果不小心關掉或重整，還能繼續遊戲。
+             // 只要前三關解完，重新整理也一定會跳出進入禮堂的入口
              setTimeout(() => showFinalAnswer(), 500);
         }
     }
