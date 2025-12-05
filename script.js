@@ -387,7 +387,8 @@ async function startTypingAnimation() {
     }
 }
 
-window.addEventListener('load', startTypingAnimation);
+// 只要 HTML 架構讀完就馬上開始，不用等圖片
+document.addEventListener('DOMContentLoaded', startTypingAnimation);
 
 // ==========================================
 // 7. 結局相關功能
