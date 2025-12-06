@@ -1,11 +1,10 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>記憶拼圖 - 婚禮前夜</title>
-    
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -26,6 +25,7 @@
             <div class="indicator-dot active" data-slide="0"></div>
             <div class="indicator-dot" data-slide="1"></div>
             <div class="indicator-dot" data-slide="2"></div>
+            <div class="indicator-dot" data-slide="3"></div>
         </div>
 
         <div class="slides-wrapper" id="slidesWrapper">
@@ -93,14 +93,32 @@
                     </button>
                 </div>
             </div>
+
+            <div class="slide" data-slide="3">
+                <div class="slide-image">
+                    <img src="https://i.ibb.co/0Rgmrmwg/Gemini-Generated-Image-5o7gm05o7gm05o7g.jpg" class="slide-main-image" alt="婚禮現場" loading="lazy">
+
+                    <div class="hotspot finale-hotspot" style="top: 50%; left: 20%;" data-info="新人的大圖輸出相片背後，好像怪怪的？" data-clue-img=""></div>
+                    <div class="hotspot finale-hotspot" style="top: 47%; left: 50%;" data-info="真理之書的說明板上，有幾個字顏色不一樣？" data-clue-img=""></div>
+                    <div class="hotspot finale-hotspot" style="top: 40%; left: 80%;" data-info="雞尾酒廳的左邊牆壁上（詳細位置阿潔週日彩排確認）" data-clue-img=""></div>
+                </div>
+                <div class="button-area">
+                    <button class="solve-button pixel-text" 
+                            data-slide="3" 
+                            data-question="請輸入隱藏在婚禮現場的最終密碼："
+                            data-placeholder="請輸入答案（六個英文字母）">
+                        最終謎題
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div class="modal" id="infoModal">
         <div class="modal-content">
             <h2 class="pixel-text">線索</h2>
-            <div class="clue-image-placeholder" id="clueImagePlaceholder">
-            </div>
+            <div class="clue-image-placeholder" id="clueImagePlaceholder"></div>
             <p id="infoText"></p>
             <div class="modal-buttons">
                 <button class="modal-button secondary pixel-text" onclick="closeModal('infoModal')">關閉</button>
@@ -113,9 +131,7 @@
             <h2 class="pixel-text">輸入答案</h2>
             <p id="puzzleQuestion">請輸入本區塊的謎題答案：</p>
             <input type="text" id="answerInput" placeholder="請輸入答案" class="pixel-text">
-
             <p class="hint-message" id="hintMessage">答案錯誤，請再試試！</p>
-
             <div class="modal-buttons">
                 <button class="modal-button primary pixel-text" onclick="checkAnswer()">提交</button>
                 <button class="modal-button secondary pixel-text" onclick="closeModal('puzzleModal')">取消</button>
@@ -151,25 +167,6 @@
         </div>
     </div>
 
-    <div id="grandFinaleOverlay">
-        <div class="finale-container">
-            <img src="https://i.ibb.co/0Rgmrmwg/Gemini-Generated-Image-5o7gm05o7gm05o7g.jpg" class="finale-img" alt="婚禮現場" loading="lazy">
-
-            <div class="hotspot finale-hotspot" style="top: 50%; left: 20%;" data-info="新人的大圖輸出相片背後，好像怪怪的？" data-clue-img=""></div>
-            <div class="hotspot finale-hotspot" style="top: 47%; left: 50%;" data-info="真理之書的說明板上，有幾個字顏色不一樣？" data-clue-img=""></div>
-            <div class="hotspot finale-hotspot" style="top: 40%; left: 80%;" data-info="雞尾酒廳的左邊牆壁上（詳細位置阿潔週日彩排確認）" data-clue-img=""></div>
-
-            <div class="button-area finale-button-area">
-                <button class="solve-button pixel-text" 
-                        data-slide="3" 
-                        data-question="請輸入隱藏在婚禮現場的最終密碼："
-                        data-placeholder="請輸入答案（六個英文字母）">
-                    最終謎題
-                </button>
-            </div>
-        </div>
-    </div>
-
     <div id="trueEndingModal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeModal('trueEndingModal')">&times;</span>
@@ -186,6 +183,5 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
 </body>
 </html>
