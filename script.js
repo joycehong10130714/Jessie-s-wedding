@@ -4,7 +4,7 @@
 const gameState = {
     currentSlide: 0,
     // [設定] 第4個答案 (索引3)，請將 'FINAL' 改成您想要的最終謎底
-    puzzleAnswers: ['2163', '340', '超大優惠', 'FINAL'], 
+    puzzleAnswers: ['2163', '340', '超大優惠', 'JESSIE'], 
     // [設定] 新增第4個解謎狀態
     solvedPuzzles: [false, false, false, false], 
     solutions: [
