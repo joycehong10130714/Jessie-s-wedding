@@ -3,9 +3,8 @@
 // ==========================================
 const gameState = {
     currentSlide: 0,
-    // [設定] 第4個答案 (索引3)，請將 'FINAL' 改成您想要的最終謎底
+    // [設定] 答案庫
     puzzleAnswers: ['2163', '340', '超大優惠', 'JESSIE'], 
-    // [設定] 新增第4個解謎狀態
     solvedPuzzles: [false, false, false, false], 
     solutions: [
         '你點亮了第一段記憶......',
@@ -13,7 +12,7 @@ const gameState = {
         '你點亮了第三段記憶......',
         '恭喜通關！' 
     ],
-    finalUrlShown: false,
+    finalUrlShown: false, // 是否已進入過禮堂
     currentSolveButton: null
 };
 
@@ -28,13 +27,11 @@ window.addEventListener('DOMContentLoaded', function() {
 // 2. 事件監聽設定
 // ==========================================
 function setupEventListeners() {
-    // 左右箭頭
     const leftArrow = document.getElementById('leftArrow');
     const rightArrow = document.getElementById('rightArrow');
     if(leftArrow) leftArrow.addEventListener('click', () => navigate(-1));
     if(rightArrow) rightArrow.addEventListener('click', () => navigate(1));
 
-    // 熱點點擊
     document.querySelectorAll('.hotspot').forEach(hotspot => {
         hotspot.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -44,15 +41,12 @@ function setupEventListeners() {
         });
     });
 
-    // 解謎按鈕 (包含新的結局按鈕)
     document.querySelectorAll('.solve-button').forEach(button => {
         button.addEventListener('click', function() {
             const slideIndex = parseInt(this.dataset.slide);
             gameState.currentSolveButton = this; 
             
-            // 如果這題已經解開，直接顯示結果
             if (gameState.solvedPuzzles[slideIndex]) {
-                // 如果是最後一題(索引3)，顯示彩蛋視窗；否則顯示一般解答視窗
                 if (slideIndex === 3) {
                     showTrueEnding();
                 } else {
@@ -64,7 +58,6 @@ function setupEventListeners() {
         });
     });
 
-    // 點擊彈窗外部關閉
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === this) {
@@ -73,7 +66,6 @@ function setupEventListeners() {
         });
     });
 
-    // 觸控滑動支援
     let touchStartX = 0;
     let touchEndX = 0;
     const wrapper = document.getElementById('slidesWrapper');
@@ -95,7 +87,6 @@ function setupEventListeners() {
         if (touchEndX - touchStartX > swipeThreshold) navigate(-1);
     }
 
-    // Enter 鍵提交答案
     const answerInput = document.getElementById('answerInput');
     if(answerInput) {
         answerInput.addEventListener('keypress', function(e) {
@@ -109,8 +100,15 @@ function setupEventListeners() {
 // ==========================================
 function navigate(direction) {
     let newSlide = gameState.currentSlide + direction;
-    if (newSlide < 0) newSlide = 2; 
-    else if (newSlide > 2) newSlide = 0; 
+    
+    // 定義最大頁數：已解鎖為3 (第四關)，未解鎖為2 (第三關)
+    const maxSlide = gameState.finalUrlShown ? 3 : 2;
+
+    if (newSlide < 0) {
+        newSlide = maxSlide; 
+    } else if (newSlide > maxSlide) {
+        newSlide = 0; 
+    }
     
     gameState.currentSlide = newSlide;
     updateSlidePosition();
@@ -120,7 +118,8 @@ function navigate(direction) {
 function updateSlidePosition() {
     const wrapper = document.getElementById('slidesWrapper');
     if(wrapper) {
-        wrapper.style.transform = `translateX(-${gameState.currentSlide * 33.333}%)`;
+        // 因為有 4 張圖，寬度 400%，每次移動 25%
+        wrapper.style.transform = `translateX(-${gameState.currentSlide * 25}%)`;
     }
     document.querySelectorAll('.indicator-dot').forEach((dot, index) => {
         if (index === gameState.currentSlide) dot.classList.add('active');
@@ -135,7 +134,6 @@ function updateNavigation() {
     if(rightArrow) rightArrow.classList.remove('hidden');
 }
 
-// 顯示熱點資訊
 function showInfo(text, imageUrl) {
     const infoModal = document.getElementById('infoModal');
     const clueImagePlaceholder = document.getElementById('clueImagePlaceholder');
@@ -145,13 +143,11 @@ function showInfo(text, imageUrl) {
     
     if(clueImagePlaceholder) {
         clueImagePlaceholder.innerHTML = ''; 
-        // 只有當 imageUrl 存在且不為空時才顯示
         if (imageUrl && imageUrl.trim() !== '') {
             const img = document.createElement('img');
             img.src = imageUrl;
             img.alt = '線索圖片';
             clueImagePlaceholder.appendChild(img);
-            
             clueImagePlaceholder.classList.remove('hidden');
             clueImagePlaceholder.style.display = 'block'; 
         } else {
@@ -173,12 +169,17 @@ function showPuzzleInput(slideIndex) {
         ? gameState.currentSolveButton.dataset.question 
         : '請輸入你找到的答案';
 
+    const placeholderText = gameState.currentSolveButton 
+        ? gameState.currentSolveButton.dataset.placeholder 
+        : '請輸入答案';
+
     const questionElement = document.getElementById('puzzleQuestion');
     if(questionElement) questionElement.textContent = questionText; 
     
     const inputElement = document.getElementById('answerInput');
     if(inputElement) {
         inputElement.value = '';
+        inputElement.placeholder = placeholderText; 
         inputElement.focus();
     }
 
@@ -197,21 +198,18 @@ function checkAnswer() {
     const correctAnswer = gameState.puzzleAnswers[gameState.currentPuzzleIndex].toUpperCase();
     
     if (input === correctAnswer) {
-        // 答案正確
         gameState.solvedPuzzles[gameState.currentPuzzleIndex] = true;
         saveGameState();
         updateSolveButton(gameState.currentPuzzleIndex);
         closeModal('puzzleModal');
         
-        // 判斷是否為最後一關 (索引3)
         if (gameState.currentPuzzleIndex === 3) {
-            showTrueEnding(); // 顯示彩蛋視窗
+            showTrueEnding(); 
         } else {
-            showSolution(gameState.currentPuzzleIndex); // 顯示一般解答視窗
-            checkAllPuzzlesSolved(); // 檢查是否前三關都過了
+            showSolution(gameState.currentPuzzleIndex); 
+            checkAllPuzzlesSolved(); 
         }
     } else {
-        // 答案錯誤
         const hintElement = document.getElementById('hintMessage');
         if(hintElement) hintElement.classList.add('show');
         inputElement.value = '';
@@ -220,12 +218,11 @@ function checkAnswer() {
 }
 
 function checkAllPuzzlesSolved() {
-    // 檢查前三題 (index 0, 1, 2) 是否都解開
+    // 檢查前三題是否都解開
     const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(solved => solved === true);
     
-    // 如果前三關解開，且還沒顯示過，就顯示
+    // 如果解完前三關，且還沒開啟過第四關
     if (firstThreeSolved && !gameState.finalUrlShown) {
-        gameState.finalUrlShown = true;
         saveGameState();
         setTimeout(() => {
             showFinalAnswer(); 
@@ -233,13 +230,11 @@ function checkAllPuzzlesSolved() {
     }
 }
 
-// 顯示通往結局的過場視窗 (走入禮堂)
 function showFinalAnswer() {
     const modal = document.getElementById('finalModal');
     if(modal) modal.classList.add('active');
 }
 
-// 顯示一般解謎後的文字
 function showSolution(slideIndex) {
     const textElement = document.getElementById('solutionText');
     if(textElement) textElement.textContent = gameState.solutions[slideIndex];
@@ -248,10 +243,26 @@ function showSolution(slideIndex) {
     if(modal) modal.classList.add('active');
 }
 
-// 顯示真正的最終彩蛋視窗
 function showTrueEnding() {
     const modal = document.getElementById('trueEndingModal');
     if(modal) modal.classList.add('active');
+}
+
+// 點擊「走入禮堂」後的解鎖動作
+function enterGrandFinale() {
+    closeModal('finalModal');
+    
+    // 1. 設定為已解鎖
+    gameState.finalUrlShown = true;
+    saveGameState();
+
+    // 2. 顯示第四個指示點
+    const indicatorContainer = document.querySelector('.slide-indicator');
+    if(indicatorContainer) indicatorContainer.classList.add('unlocked');
+
+    // 3. 滑動到第 4 張投影片
+    gameState.currentSlide = 3;
+    updateSlidePosition();
 }
 
 function updateSolveButton(slideIndex) {
@@ -282,26 +293,28 @@ function loadGameState() {
     const saved = localStorage.getItem('puzzleGameState');
     if (saved) {
         const state = JSON.parse(saved);
-        // 合併儲存的狀態與預設狀態
         if (state.solvedPuzzles.length < gameState.solvedPuzzles.length) {
             const diff = gameState.solvedPuzzles.length - state.solvedPuzzles.length;
             for(let i=0; i<diff; i++) state.solvedPuzzles.push(false);
         }
         
         gameState.solvedPuzzles = state.solvedPuzzles;
-        // 這裡讀取紀錄
         gameState.finalUrlShown = state.finalUrlShown || false;
         
-        // 恢復按鈕狀態
         gameState.solvedPuzzles.forEach((solved, index) => {
             if (solved) updateSolveButton(index);
         });
 
-        // [關鍵] 檢查前三關是否解完，如果是，自動彈出過場視窗
-        const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(s => s === true);
-        if (firstThreeSolved) {
-             // 只要前三關解完，重新整理也一定會跳出進入禮堂的入口
-             setTimeout(() => showFinalAnswer(), 500);
+        // 檢查是否已解鎖第四關
+        if (gameState.finalUrlShown) {
+            const indicatorContainer = document.querySelector('.slide-indicator');
+            if(indicatorContainer) indicatorContainer.classList.add('unlocked');
+        } else {
+            // 如果還沒解鎖，但三關已過，提示玩家進入
+            const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(s => s === true);
+            if (firstThreeSolved) {
+                 setTimeout(() => showFinalAnswer(), 500);
+            }
         }
     }
 }
@@ -387,35 +400,5 @@ async function startTypingAnimation() {
     }
 }
 
-// 只要 HTML 架構讀完就馬上開始，不用等圖片
+// 只要 HTML 讀完就開始動畫，不用等圖片
 document.addEventListener('DOMContentLoaded', startTypingAnimation);
-
-// ==========================================
-// 7. 結局相關功能
-// ==========================================
-function enterGrandFinale() {
-    closeModal('finalModal');
-    
-    const finaleOverlay = document.getElementById('grandFinaleOverlay');
-    if(finaleOverlay) {
-        finaleOverlay.classList.add('active');
-        setupFinaleHotspots();
-    }
-}
-
-function setupFinaleHotspots() {
-    const finaleHotspots = document.querySelectorAll('.finale-hotspot');
-    
-    finaleHotspots.forEach(hotspot => {
-        // Clone node 移除舊監聽器
-        const newHotspot = hotspot.cloneNode(true);
-        hotspot.parentNode.replaceChild(newHotspot, hotspot);
-        
-        newHotspot.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const infoText = this.dataset.info;
-            // 傳入空字串作為圖片參數
-            showInfo(infoText, ''); 
-        });
-    });
-}
