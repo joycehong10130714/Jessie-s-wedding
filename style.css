@@ -1,5 +1,5 @@
 /* ================================================= */
-/* === 調整後 CSS V4：童趣暖色系 + 手機修正版 === */
+/* === 調整後 CSS V4：童趣暖色系 (Final Version) === */
 /* ================================================= */
 
 * {
@@ -8,23 +8,16 @@
     box-sizing: border-box;
 }
 
-/* 修改後的 Body 設定：強制鎖定畫面防止手機鍵盤推擠 */
+/* 強制鎖定畫面防止手機鍵盤推擠 */
 html, body {
-    position: fixed;      /* 關鍵：鎖定視窗位置 */
+    position: fixed;
     width: 100%;
-    height: 100%;         /* 關鍵：鎖定視窗高度 */
-    
+    height: 100%;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    
     font-family: 'Courier New', monospace;
-    overflow: hidden;     /* 禁止捲動 */
-    
-    /* 主背景：極淺檸檬黃 */
+    overflow: hidden;
     background: #FFFFE0; 
-    
-    /* 保持內容置中 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,7 +30,7 @@ html, body {
     color: #8B4513; 
 }
 
-/* 主容器 (手機框) */
+/* 主容器 */
 .container {
     width: 100vw;
     height: 100vh;
@@ -64,7 +57,6 @@ html, body {
 @media (max-width: 430px) {
     .container {
         max-width: 100vw;
-        /* 使用 dvh 自動扣掉手機瀏覽器的網址列高度 */
         height: 100dvh; 
         max-height: 100dvh;
         border: none;
@@ -75,26 +67,25 @@ html, body {
 /* 滑動區塊容器 */
 .slides-wrapper {
     display: flex;
-    width: 400%; /* 因為有4個區塊 */
+    width: 400%; /* 4張圖 */
     height: 100%;
     transition: transform 0.3s ease-out;
 }
 
 /* 單一區塊 */
 .slide {
-    width: 25%; /* 100% / 4 */
+    width: 25%;
     height: 100%;
     position: relative;
     flex-shrink: 0;
     min-width: 25%;
-    
     display: flex;
     flex-direction: column;
 }
 
 .slide-image {
     height: auto !important;
-    flex: 1; /* 佔據剩餘空間 */
+    flex: 1; 
     width: 100%;
     position: relative;
     background: #FFFFE0; 
@@ -107,7 +98,7 @@ html, body {
 .slide-image .slide-main-image {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* 預設完整顯示 */
+    object-fit: contain; 
     position: absolute;
     top: 0;
     left: 0;
@@ -115,9 +106,9 @@ html, body {
     image-rendering: pixelated;
 }
 
-/* 針對第四關 (Slide 3) 的圖片強制滿版，避免手機上看起來歪掉 */
+/* 針對第四關 (Slide 3) 的圖片：維持完整顯示 (Contain) */
 .slide[data-slide="3"] .slide-main-image {
-    object-fit: contain!important;
+    object-fit: contain !important;
     object-position: center center;
 }
 
@@ -148,16 +139,12 @@ html, body {
 /* 底部按鈕區 */
 .button-area {
     height: auto !important;
-    min-height: 0 !important; /* 取消最小高度限制，讓它貼合 */
+    min-height: 0 !important;
     flex-shrink: 0;
-    
     background: #FFDAB9;
     border-top: 4px solid #8B4513;
-    
-    /* 上下間距調整 */
     padding-top: 12px;
     padding-bottom: 12px;
-    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,15 +171,11 @@ html, body {
     font-family: 'Courier New', monospace;
 }
 
-.solve-button:hover {
-    background: #FFB589;
-}
-
+.solve-button:hover { background: #FFB589; }
 .solve-button:active {
     transform: translate(2px, 2px);
     box-shadow: 2px 2px 0px #8B4513;
 }
-
 .solve-button.solved {
     background: #FFDAB9;
     border-color: #8B4513;
@@ -219,10 +202,7 @@ html, body {
     box-shadow: 0 4px 8px rgba(139, 69, 19, 0.3);
 }
 
-.nav-arrow:hover {
-    background: rgba(255, 160, 122, 1);
-}
-
+.nav-arrow:hover { background: rgba(255, 160, 122, 1); }
 .nav-arrow.left { left: 10px; }
 .nav-arrow.right { right: 10px; }
 .nav-arrow.hidden { display: none; }
@@ -327,16 +307,8 @@ html, body {
     text-transform: uppercase;
 }
 
-.modal-button.primary {
-    background: #FFA07A;
-    color: #8B4513;
-}
-
-.modal-button.secondary {
-    background: #FFDAB9;
-    color: #8B4513;
-}
-
+.modal-button.primary { background: #FFA07A; color: #8B4513; }
+.modal-button.secondary { background: #FFDAB9; color: #8B4513; }
 .modal-button:hover { opacity: 0.9; }
 
 .hint-message {
@@ -345,7 +317,6 @@ html, body {
     margin-top: 8px;
     display: none;
 }
-
 .hint-message.show { display: block; }
 
 /* 區塊指示器 */
@@ -366,17 +337,11 @@ html, body {
     border: 2px solid #8B4513;
 }
 
-.indicator-dot.active {
-    background: #FFA07A;
-}
+.indicator-dot.active { background: #FFA07A; }
 
 /* 第四個點預設隱藏，解鎖後顯示 */
-.indicator-dot:last-child {
-    display: none;
-}
-.slide-indicator.unlocked .indicator-dot:last-child {
-    display: block;
-}
+.indicator-dot:last-child { display: none; }
+.slide-indicator.unlocked .indicator-dot:last-child { display: block; }
 
 #solutionText {
     white-space: pre-wrap; 
@@ -409,7 +374,6 @@ html, body {
     box-shadow: 2px 2px 0px #8B4513;
 }
 
-/* 確保彩蛋按鈕連結置中 */
 #trueEndingModal a {
     display: block;
     width: fit-content;
@@ -433,10 +397,7 @@ html, body {
     transition: opacity 1.5s ease-out; 
 }
 
-.intro-content {
-    max-width: 600px;
-    width: 100%;
-}
+.intro-content { max-width: 600px; width: 100%; }
 
 #typingText, .cursor {
     font-family: "Courier New", Courier, monospace;
