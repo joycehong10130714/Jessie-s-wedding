@@ -3,7 +3,6 @@
 // ==========================================
 const gameState = {
     currentSlide: 0,
-    // [設定] 答案庫
     puzzleAnswers: ['2163', '340', '超大優惠', 'JESSIE'], 
     solvedPuzzles: [false, false, false, false], 
     solutions: [
@@ -218,7 +217,6 @@ function checkAnswer() {
 }
 
 function checkAllPuzzlesSolved() {
-    // 檢查前三題是否都解開
     const firstThreeSolved = gameState.solvedPuzzles.slice(0, 3).every(solved => solved === true);
     
     // 如果解完前三關，且還沒開啟過第四關
